@@ -31,7 +31,8 @@ io.on('connection', (socket) => {
             id: socket.id,
             x: data.x,
             y: data.y,
-            floor: data.floor || 1 // Default to floor 1 if missing
+            floor: data.floor || 1, // Default to floor 1 if missing
+            role: data.role || 'civilian'
         };
         // Broadcast updated user list to ALL clients
         io.emit('stateUpdate', {
@@ -39,46 +40,47 @@ io.on('connection', (socket) => {
             fireLocations: fireLocations
         });
     });
+});
 
-    // Handle Fire Updates
-    socket.on('toggleFire', (data) => {
-        // data = { x, y, floor }
-        const floor = data.floor || 1;
-        const existingIdx = fireLocations.findIndex(f => f.x === data.x && f.y === data.y && f.floor === floor);
+// Handle Fire Updates
+socket.on('toggleFire', (data) => {
+    // data = { x, y, floor }
+    const floor = data.floor || 1;
+    const existingIdx = fireLocations.findIndex(f => f.x === data.x && f.y === data.y && f.floor === floor);
 
-        if (existingIdx >= 0) {
-            fireLocations.splice(existingIdx, 1);
-        } else {
-            fireLocations.push({ x: data.x, y: data.y, floor: floor });
-        }
+    if (existingIdx >= 0) {
+        fireLocations.splice(existingIdx, 1);
+    } else {
+        fireLocations.push({ x: data.x, y: data.y, floor: floor });
+    }
 
-        io.emit('stateUpdate', {
-            users: Object.values(users),
-            fireLocations: fireLocations
-        });
+    io.emit('stateUpdate', {
+        users: Object.values(users),
+        fireLocations: fireLocations
     });
+});
 
-    // Handle Clear Fire
-    socket.on('clearFire', (data) => {
-        const floor = data.floor || 1;
-        // Filter out fires from the specific floor
-        fireLocations = fireLocations.filter(f => f.floor !== floor);
+// Handle Clear Fire
+socket.on('clearFire', (data) => {
+    const floor = data.floor || 1;
+    // Filter out fires from the specific floor
+    fireLocations = fireLocations.filter(f => f.floor !== floor);
 
-        io.emit('stateUpdate', {
-            users: Object.values(users),
-            fireLocations: fireLocations
-        });
+    io.emit('stateUpdate', {
+        users: Object.values(users),
+        fireLocations: fireLocations
     });
+});
 
-    // Handle Disconnect
-    socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id);
-        delete users[socket.id];
-        io.emit('stateUpdate', {
-            users: Object.values(users),
-            fireLocations: fireLocations
-        });
+// Handle Disconnect
+socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+    delete users[socket.id];
+    io.emit('stateUpdate', {
+        users: Object.values(users),
+        fireLocations: fireLocations
     });
+});
 });
 
 const os = require('os');

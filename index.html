@@ -27,11 +27,17 @@
             <div class="controls">
                 <div class="control-group">
                     <label>Building Floor</label>
-                    <select id="floorSelect">
-                        <option value="1">Floor 1 (Lobby)</option>
-                        <option value="2">Floor 2 (Offices)</option>
-                        <option value="3">Floor 3 (Labs)</option>
-                    </select>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="floorSelect" style="flex: 1;">
+                            <option value="1">Floor 1 (Lobby)</option>
+                            <option value="2">Floor 2 (Offices)</option>
+                            <option value="3">Floor 3 (Labs)</option>
+                        </select>
+                        <select id="roleSelect" style="flex: 1; background: #334155;">
+                            <option value="civilian">👤 Civilian</option>
+                            <option value="firefighter">👨‍🚒 Firefighter</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="control-group">
                     <label>Simulation Mode</label>
@@ -41,6 +47,12 @@
                         <button class="action-btn" id="clearFireBtn" style="background: #ef4444; color: white;">Clear
                             Fire</button>
                     </div>
+                </div>
+                <div class="control-group">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <!-- Real-World features removed -->
+                    </div>
+                    <!-- Calibration Panel Removed -->
                 </div>
                 <div class="legend">
                     <div class="legend-item"><span class="dot user"></span> You</div>
